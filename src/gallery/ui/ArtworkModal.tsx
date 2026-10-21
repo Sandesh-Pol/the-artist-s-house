@@ -21,12 +21,12 @@ export function ArtworkModal() {
   });
 
   if (!selected || idx < 0) return null;
-  const slot = list[idx];
+  const slot = list[idx]!;
   const art = artworkFor(uploads, slot.id)!;
   const room = ROOMS.find((r) => r.id === slot.roomId)!;
 
   function go(d: number) {
-    const n = list[(idx + d + list.length) % list.length];
+    const n = list[(idx + d + list.length) % list.length]!;
     face(n.roomId, n.side);
     select(n.id);
   }

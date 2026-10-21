@@ -11,7 +11,7 @@ export function FloorMap() {
     <div className="glass pointer-events-auto rounded-md p-3 animate-fade" aria-label="Floor map">
       <div className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
         <span>Floor plan</span>
-        <span className="text-primary">{ROOMS[roomIndex].name}</span>
+        <span className="text-primary">{ROOMS[roomIndex]?.name}</span>
       </div>
       <div className="flex gap-3">
         {floors.map((f) => (
@@ -41,7 +41,7 @@ export function FloorMap() {
                         <line key={k} x1={5 + r.gx * C} x2={11 + r.gx * C} y1={8 + r.gz * C + k * 4} y2={8 + r.gz * C + k * 4} className={active ? "stroke-primary-foreground" : "stroke-muted-foreground"} strokeWidth={0.8} />
                       ))}
                     {active && (
-                      <g transform={`translate(${2 + r.gx * C + (C - 2) / 2} ${2 + r.gz * C + (C - 2) / 2}) rotate(${ARROW[HEADINGS[heading]]})`}>
+                      <g transform={`translate(${2 + r.gx * C + (C - 2) / 2} ${2 + r.gz * C + (C - 2) / 2}) rotate(${ARROW[HEADINGS[heading] ?? "n"]})`}>
                         <path d="M0 -7 L5 4 L0 1.5 L-5 4 Z" className="fill-primary-foreground" />
                       </g>
                     )}

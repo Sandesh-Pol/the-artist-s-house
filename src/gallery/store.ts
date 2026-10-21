@@ -42,7 +42,10 @@ export const useGallery = create<GalleryState>((set, get) => ({
   panel: null,
   uploads: {},
   enter: () => set({ entered: true }),
-  goRoom: (i) => set({ roomIndex: Math.max(0, Math.min(ROOMS.length - 1, i)), look: [0, 0] }),
+  goRoom: (i) => {
+    const roomIndex = Math.max(0, Math.min(ROOMS.length - 1, i));
+    set({ roomIndex, heading: HEADINGS.indexOf(ROOMS[roomIndex]!.view), look: [0, 0] });
+  },
   step: (d) => get().goRoom(get().roomIndex + d),
   turn: (d) => set({ heading: (get().heading + d + 4) % 4, look: [0, 0] }),
   face: (roomId, side) =>

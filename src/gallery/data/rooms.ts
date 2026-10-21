@@ -19,11 +19,12 @@ export interface Room {
   wallTone: string;
   slots: FrameSlot[];
   stairs?: boolean;
+  view: Side; // default facing direction on arrival
 }
 
 export const ROOMS: Room[] = [
   {
-    id: "foyer", name: "Entrance Hall", subtitle: "Where every visit begins",
+    id: "foyer", view: "w", name: "Entrance Hall", subtitle: "Where every visit begins",
     floor: 0, gx: 0, gz: 0, height: STOREY,
     doors: [{ side: "e" }, { side: "s" }], windows: ["n"], wallTone: "#ece4d6",
     slots: [
@@ -33,7 +34,7 @@ export const ROOMS: Room[] = [
     ],
   },
   {
-    id: "living", name: "Living Room", subtitle: "Light, warmth & large canvases",
+    id: "living", view: "s", name: "Living Room", subtitle: "Light, warmth & large canvases",
     floor: 0, gx: 1, gz: 0, height: STOREY,
     doors: [{ side: "w" }, { side: "e" }], windows: ["n"], wallTone: "#e6dccb",
     slots: [
@@ -44,7 +45,7 @@ export const ROOMS: Room[] = [
     ],
   },
   {
-    id: "studio", name: "Studio", subtitle: "Sketches, studies & works in progress",
+    id: "studio", view: "n", name: "Studio", subtitle: "Sketches, studies & works in progress",
     floor: 0, gx: 2, gz: 0, height: STOREY,
     doors: [{ side: "w" }], windows: ["e"], wallTone: "#f1ece2",
     slots: [
@@ -55,7 +56,7 @@ export const ROOMS: Room[] = [
     ],
   },
   {
-    id: "stair", name: "Stair Hall", subtitle: "A double-height gallery",
+    id: "stair", view: "w", name: "Stair Hall", subtitle: "A double-height gallery",
     floor: 0, gx: 0, gz: 1, height: STOREY * 2, eye: 3.2, stairs: true,
     doors: [{ side: "n" }, { side: "e", bottom: STOREY }], windows: ["s"], wallTone: "#e9e1d3",
     slots: [
@@ -64,7 +65,7 @@ export const ROOMS: Room[] = [
     ],
   },
   {
-    id: "corridor", name: "Upper Corridor", subtitle: "Small works, close up",
+    id: "corridor", view: "n", name: "Upper Corridor", subtitle: "Small works, close up",
     floor: 1, gx: 1, gz: 1, height: STOREY,
     doors: [{ side: "w" }, { side: "e" }], windows: [], wallTone: "#efe8dc",
     slots: [
@@ -76,7 +77,7 @@ export const ROOMS: Room[] = [
     ],
   },
   {
-    id: "bedroom", name: "Quiet Room", subtitle: "Personal pieces & stories",
+    id: "bedroom", view: "n", name: "Quiet Room", subtitle: "Personal pieces & stories",
     floor: 1, gx: 2, gz: 1, height: STOREY,
     doors: [{ side: "w" }], windows: ["s"], wallTone: "#e3d8c6",
     slots: [

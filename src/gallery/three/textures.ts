@@ -31,8 +31,8 @@ export function woodTexture() {
       const offset = r() * s;
       for (let j = -1; j < 2; j++) {
         const x = offset + j * s * 0.7;
-        const l = 38 + r() * 10;
-        c.fillStyle = `hsl(${28 + r() * 6}, ${42 + r() * 10}%, ${l}%)`;
+        const l = 30 + r() * 8;
+        c.fillStyle = `hsl(${24 + r() * 6}, ${38 + r() * 10}%, ${l}%)`;
         c.fillRect(x, i * ph, s * 0.7, ph);
         for (let g = 0; g < 26; g++) {
           c.strokeStyle = `hsla(25, 40%, ${l - 12}%, ${0.08 + r() * 0.12})`;

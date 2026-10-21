@@ -134,7 +134,7 @@ export function Room({ room }: { room: RoomT }) {
   const mats = useMemo(() => {
     const wall = new THREE.MeshStandardMaterial({ color: room.wallTone, map: plasterTexture(), roughness: 0.95 });
     const floor = new THREE.MeshStandardMaterial({ map: woodTexture(), roughness: 0.55 });
-    const ceiling = new THREE.MeshStandardMaterial({ color: "#f7f3ec", roughness: 1 });
+    const ceiling = new THREE.MeshStandardMaterial({ color: "#f7f3ec", emissive: "#efe6d6", emissiveIntensity: 0.35, roughness: 1 });
     const trim = new THREE.MeshStandardMaterial({ color: "#f3eee5", roughness: 0.6 });
     const rug = new THREE.MeshStandardMaterial({ map: rugTexture(), roughness: 1 });
     return { wall, floor, ceiling, trim, rug };

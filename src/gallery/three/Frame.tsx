@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Text } from "@react-three/drei";
+import { labelTexture } from "./textures";
 import * as THREE from "three";
 import type { FrameSlot } from "../data/rooms";
 import { useGallery, artworkFor } from "../store";
@@ -87,9 +87,10 @@ export function Frame({ slot, roomId }: { slot: FrameSlot; roomId: string }) {
           <meshStandardMaterial map={tex} roughness={0.7} />
         </mesh>
       ) : (
-        <Text position={[0, 0, 0.075]} fontSize={0.09} color="#8a7a66" anchorX="center" anchorY="middle" maxWidth={fw * 0.8} textAlign="center">
-          {curate || hover ? "+ Add artwork" : "Empty frame"}
-        </Text>
+        <mesh position={[0, 0, 0.07]}>
+          <planeGeometry args={[iw, ih]} />
+          <meshStandardMaterial map={labelTexture(curate || hover ? "+ Add artwork" : "Empty frame")} roughness={1} />
+        </mesh>
       )}
       {/* picture light */}
       <mesh position={[0, fh / 2 + 0.22, 0.12]}>

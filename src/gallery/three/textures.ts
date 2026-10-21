@@ -84,3 +84,27 @@ export function rugTexture() {
     }
   }, [1, 1]);
 }
+
+const labels = new Map<string, THREE.Texture>();
+export function labelTexture(text: string) {
+  if (labels.has(text)) return labels.get(text)!;
+  const cv = document.createElement("canvas");
+  cv.width = 512;
+  cv.height = 512;
+  const c = cv.getContext("2d")!;
+  c.fillStyle = "#efe8db";
+  c.fillRect(0, 0, 512, 512);
+  c.strokeStyle = "#bfae94";
+  c.setLineDash([14, 10]);
+  c.lineWidth = 4;
+  c.strokeRect(40, 40, 432, 432);
+  c.fillStyle = "#8a7a66";
+  c.font = "italic 44px Georgia, serif";
+  c.textAlign = "center";
+  c.textBaseline = "middle";
+  c.fillText(text, 256, 256);
+  const t = new THREE.CanvasTexture(cv);
+  t.colorSpace = THREE.SRGBColorSpace;
+  labels.set(text, t);
+  return t;
+}

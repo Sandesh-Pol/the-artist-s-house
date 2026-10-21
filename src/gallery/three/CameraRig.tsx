@@ -15,9 +15,9 @@ export function CameraRig() {
   useFrame((_, raw) => {
     const dt = Math.min(raw, 0.05);
     const { roomIndex, heading, look, entered } = useGallery.getState();
-    const room = ROOMS[roomIndex];
+    const room = ROOMS[roomIndex]!;
     const [cx, cy, cz] = roomCenter(room);
-    const side = HEADINGS[heading];
+    const side = HEADINGS[heading]!;
     const [dx, dz] = DIR[side];
     const back = size.width < size.height ? 3 : 2.2;
     tmpPos.set(cx - dx * back, cy + (room.eye ?? 1.65), cz - dz * back);

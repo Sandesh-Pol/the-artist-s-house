@@ -57,7 +57,10 @@ function useControls(el: React.RefObject<HTMLDivElement | null>) {
       }
     };
     const up = (e: PointerEvent) => {
-      if (!start || blocked()) return (start = null);
+      if (!start || blocked()) {
+        start = null;
+        return;
+      }
       const dx = e.clientX - start.x;
       const dy = e.clientY - start.y;
       const fast = performance.now() - start.t < 320;
@@ -101,7 +104,7 @@ function NavPad() {
 
 function RoomTitle() {
   const roomIndex = useGallery((s) => s.roomIndex);
-  const r = ROOMS[roomIndex];
+  const r = ROOMS[roomIndex]!;
   return (
     <div key={r.id} className="animate-rise">
       <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">

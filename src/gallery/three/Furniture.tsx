@@ -75,7 +75,7 @@ export function Furniture({ roomId, rug }: { roomId: string; rug: THREE.Material
           {[0, 1, 2].map((i) => (
             <mesh key={i} position={[-3.6 + i * 0.5, 0.6, 3]}>
               <cylinderGeometry args={[0.08, 0.08, 0.22, 12]} />
-              <meshStandardMaterial color={["#b5654a", "#2f4a52", "#d8b24a"][i]} />
+              <meshStandardMaterial color={["#b5654a", "#2f4a52", "#d8b24a"][i] ?? "#b5654a"} />
             </mesh>
           ))}
         </>

@@ -111,7 +111,7 @@ function RoomTitle() {
         {String(roomIndex + 1).padStart(2, "0")} / {String(ROOMS.length).padStart(2, "0")} · {r.floor ? "Upper floor" : "Ground floor"}
       </p>
       <h2 className="font-display text-3xl leading-none md:text-5xl">{r.name}</h2>
-      <p className="mt-1 text-sm italic text-muted-foreground">{r.subtitle}</p>
+      <p className="mt-1 hidden text-sm italic text-muted-foreground sm:block">{r.subtitle}</p>
     </div>
   );
 }
@@ -150,8 +150,8 @@ export function GalleryApp() {
       {entered && (
         <div className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-4 md:p-6">
           <header className="pointer-events-auto flex items-center justify-between gap-3 animate-fade">
-            <span className="font-display text-xl tracking-wide md:text-2xl">{ARTIST.name}</span>
-            <nav className="glass flex items-center gap-1 rounded-full px-2 py-1 text-xs uppercase tracking-[0.18em]">
+            <span className="whitespace-nowrap font-display text-lg tracking-wide md:text-2xl">{ARTIST.name}</span>
+            <nav className="glass flex items-center gap-1 rounded-full px-1 py-1 text-[10px] uppercase tracking-[0.15em] md:px-2 md:text-xs">
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("about")}>About</button>
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("contact")}>Contact</button>
               <a className="rounded-full p-1.5 hover:text-primary" href={ARTIST.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={15} /></a>
@@ -163,14 +163,13 @@ export function GalleryApp() {
               </button>
             </nav>
           </header>
-          <div className="flex items-end justify-between gap-3">
-            <div className="flex flex-col gap-4">
-              <RoomTitle />
+          <div className="flex flex-col gap-3">
+            <RoomTitle />
+            <div className="flex items-end justify-between gap-3">
               <NavPad />
+              <FloorMap />
             </div>
-            <div className="hidden sm:block"><FloorMap /></div>
           </div>
-          <div className="absolute bottom-4 right-4 sm:hidden"><FloorMap /></div>
         </div>
       )}
       {curate && entered && (

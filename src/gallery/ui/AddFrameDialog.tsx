@@ -83,7 +83,7 @@ export function AddFrameDialog() {
           >
             Place frame & hang art
           </button>
-          <p className="text-xs text-muted-foreground">You can move or remove it later.</p>
+          <p className="text-xs text-muted-foreground">You can resize or remove it later.</p>
         </div>
       </div>
     </div>

@@ -198,6 +198,7 @@ export function GalleryApp() {
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("about")}>About</button>
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("contact")}>Contact</button>
               <a className="rounded-full p-1.5 hover:text-primary" href={ARTIST.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={15} /></a>
+              <ThemePicker />
               <button
                 className={`rounded-full px-3 py-1.5 transition ${curate ? "bg-primary text-primary-foreground" : "hover:text-primary"}`}
                 onClick={() => setCurate(!curate)}
@@ -216,12 +217,21 @@ export function GalleryApp() {
         </div>
       )}
       {curate && entered && (
-        <p className="glass pointer-events-none absolute left-1/2 top-20 z-20 -translate-x-1/2 rounded-full px-4 py-2 text-xs animate-rise">
-          Curator mode — tap any frame to hang or edit a painting
-        </p>
+        <div className="absolute left-1/2 top-20 z-20 flex -translate-x-1/2 items-center gap-2 animate-rise">
+          <p className="glass pointer-events-none rounded-full px-4 py-2 text-xs">
+            Curator mode — tap any frame to hang or edit a painting
+          </p>
+          <button
+            className="glass pointer-events-auto flex items-center gap-1.5 rounded-full px-4 py-2 text-xs text-primary transition hover:opacity-80"
+            onClick={() => setAddingFrame(true)}
+          >
+            <Plus size={14} /> New frame
+          </button>
+        </div>
       )}
       <ArtworkModal />
       <EditDialog />
+      <AddFrameDialog />
       <InfoPanel />
     </div>
   );

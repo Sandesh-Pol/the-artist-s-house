@@ -1,7 +1,13 @@
-import art1 from "@/assets/art-1.jpg";
-import art2 from "@/assets/art-2.jpg";
-import art3 from "@/assets/art-3.jpg";
-import art4 from "@/assets/art-4.jpg";
+import art3 from "@/assets/1.jpeg";
+import art6 from "@/assets/2.jpeg";
+import art1 from "@/assets/3.jpeg";
+import art5 from "@/assets/4.jpeg";
+import art4 from "@/assets/5.jpeg";
+import art2 from "@/assets/6.jpeg";
+import art7 from "@/assets/7.jpeg";
+import art8 from "@/assets/8.jpeg";
+import art9 from "@/assets/9.jpeg";
+import { ALL_SLOTS } from "./rooms";
 
 export interface Artwork {
   title: string;
@@ -14,26 +20,82 @@ export interface Artwork {
   h?: number; // frame height override (m)
 }
 
-// Default artworks keyed by frame slot id (see rooms.ts). Uploads override these.
-export const ARTWORKS: Record<string, Artwork> = {
-  "foyer-w1": {
-    title: "Afternoon in the Garden", image: art1, medium: "Oil on canvas", year: "2024",
-    description: "A study of dappled summer light falling across skin and linen.",
-    story: "Painted over three slow afternoons in my grandmother's garden. I wanted the heat to feel almost audible.",
+// Edit this ordered list to change the artwork sequence. Entries after the list stay empty.
+export const ARTWORK_SEQUENCE: Artwork[] = [
+  { 
+    title: "Pink Flamingos", 
+    image: art1, 
+    medium: "Mixed media", 
+    year: "2026", 
+    description: "A textured artwork depicting a family of vibrant pink flamingos with distinct black beaks and legs.", 
+    story: "Capturing the elegance and bonding of flamingos in a tactile format." 
   },
-  "living-s1": {
-    title: "Where the Cliffs Rest", image: art2, medium: "Acrylic, palette knife", year: "2023",
-    description: "Coastal cliffs dissolving into dusk, built up in thick layers.",
-    story: "I stood on that headland until the light was gone, then painted it from memory the same night.",
+  { 
+    title: "Heart Sanctuary", 
+    image: art2, 
+    medium: "Acrylic on paper", 
+    year: "2026", 
+    description: "A delicate green leafy vine stretching across the frame, suspending a small house with a glowing red heart window.", 
+    story: "Symbolizing home, warmth, and the growth of love in nature." 
   },
-  "studio-n2": {
-    title: "Morning Ritual", image: art3, medium: "Graphite on paper", year: "2025",
-    description: "A quiet observational drawing of hands and porcelain.",
-    story: "My mother's hands, every morning, the same cup. Drawing them felt like keeping them.",
+  { 
+    title: "Mandala Sunflowers", 
+    image: art3, 
+    medium: "Pen and ink on paper", 
+    year: "2026", 
+    description: "An intricate black-and-white ink drawing combining a mandala design with sunflower petals against a dark background.", 
+    story: "Exploring patterns of nature and symmetry through detailed penwork." 
   },
-  "bed-n1": {
-    title: "Lemons & Peonies", image: art4, medium: "Watercolour", year: "2024",
-    description: "A still life on the old dresser by the window.",
-    story: "The peonies lasted four days. I painted them on the third, when they were most open.",
+  { 
+    title: "Celestial Spiral", 
+    image: art4, 
+    medium: "Watercolor and acrylic", 
+    year: "2026", 
+    description: "A dynamic blue swirling galaxy background dotted with small golden-yellow stars.", 
+    story: "Reflecting the infinite motion and mystery of the cosmos." 
   },
-};
+  { 
+    title: "Peacock Mandala Fusion", 
+    image: art5, 
+    medium: "Pen and ink on paper", 
+    year: "2026", 
+    description: "A creative doodle art piece integrating a stylized peacock motif surrounded by floral and mandala elements.", 
+    story: "A whimsical composition blending national heritage motifs with abstract line art." 
+  },
+  { 
+    title: "Divine Trishula & Om", 
+    image: art6, 
+    medium: "Pencil on paper", 
+    year: "2026", 
+    description: "A sketch featuring a Trishula, Damru, and the Om symbol accompanied by a decorative half-mandala floral arrangement.", 
+    story: "A spiritual artwork blending sacred symbols and traditional motifs." 
+  },
+  { 
+    title: "Itachi Uchiha", 
+    image: art7, 
+    medium: "Pencil sketch", 
+    year: "2026", 
+    description: "A portrait sketch of Itachi Uchiha from Naruto wearing his Akatsuki collar and headband.", 
+    story: "A tribute to one of anime's most complex and iconic characters." 
+  },
+  { 
+    title: "Giyu Tomioka", 
+    image: art8, 
+    medium: "Pencil sketch", 
+    year: "2026", 
+    description: "A character sketch of Giyu Tomioka from Demon Slayer featuring his distinct spiky hair and calm expression.", 
+    story: "Portraying the stoic and resilient Water Hashira." 
+  },
+  { 
+    title: "Naruto Uzumaki", 
+    image: art9, 
+    medium: "Pencil sketch", 
+    year: "2026", 
+    description: "A sketch of Naruto Uzumaki wearing his leaf village headband and zipped jacket.", 
+    story: "Capturing the determined spirit of the ninja hero." 
+  },
+];
+
+export const ARTWORKS: Record<string, Artwork> = Object.fromEntries(
+  ARTWORK_SEQUENCE.map((artwork, index) => [ALL_SLOTS[index]!.id, artwork]),
+);

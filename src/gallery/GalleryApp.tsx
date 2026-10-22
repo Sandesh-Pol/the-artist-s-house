@@ -135,9 +135,50 @@ function Intro() {
   );
 }
 
+function ThemePicker() {
+  const { theme, setTheme } = useGallery();
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        className="rounded-full p-1.5 hover:text-primary"
+        onClick={() => setOpen(!open)}
+        aria-label="Change interior theme"
+      >
+        <Palette size={15} />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="glass absolute right-0 top-full z-20 mt-2 w-52 rounded-md p-2 animate-rise">
+            <p className="px-2 pb-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Interior theme</p>
+            {THEMES.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => {
+                  setTheme(t.id);
+                  setOpen(false);
+                }}
+                className={`flex w-full items-center gap-3 rounded-sm px-2 py-2 text-left text-sm transition hover:bg-accent ${theme === t.id ? "text-primary" : ""}`}
+              >
+                <span className="flex overflow-hidden rounded-full border border-border">
+                  {t.swatch.map((c) => (
+                    <span key={c} className="block size-4" style={{ background: c }} />
+                  ))}
+                </span>
+                {t.name}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export function GalleryApp() {
   const ref = useRef<HTMLDivElement>(null);
-  const { entered, curate, setCurate, setPanel, loadUploads } = useGallery();
+  const { entered, curate, setCurate, setPanel, setAddingFrame, loadUploads } = useGallery();
   useControls(ref);
   useEffect(() => {
     void loadUploads();

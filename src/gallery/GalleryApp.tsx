@@ -1,13 +1,15 @@
-import { useEffect, useRef } from "react";
-import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram, Palette, Plus } from "lucide-react";
 import { House } from "./three/House";
 import { dragState } from "./three/dragState";
 import { ROOMS } from "./data/rooms";
+import { THEMES } from "./data/themes";
 import { ARTIST } from "./data/artist";
 import { useGallery } from "./store";
 import { FloorMap } from "./ui/FloorMap";
 import { ArtworkModal } from "./ui/ArtworkModal";
 import { EditDialog } from "./ui/EditDialog";
+import { AddFrameDialog } from "./ui/AddFrameDialog";
 import { InfoPanel } from "./ui/InfoPanel";
 
 const blocked = () => {

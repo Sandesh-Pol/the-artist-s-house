@@ -185,6 +185,7 @@ function Stairs({ wood, trim }: { wood: THREE.Material; trim: THREE.Material }) 
 export function Room({ room }: { room: RoomT }) {
   const [cx, cy, cz] = roomCenter(room);
   const theme = themeById(useGallery((s) => s.theme));
+  const lightsOn = useGallery((s) => s.lightsOn);
   const wallColor = theme.wall ?? room.wallTone;
   const mats = useMemo(() => {
     const wall = new THREE.MeshStandardMaterial({ color: wallColor, map: plasterTexture(), roughness: 0.95 });
@@ -216,9 +217,9 @@ export function Room({ room }: { room: RoomT }) {
         </mesh>
         <mesh>
           <sphereGeometry args={[0.22, 24, 16]} />
-          <meshStandardMaterial color="#fff6e0" emissive="#ffe2a8" emissiveIntensity={2} toneMapped={false} />
+          <meshStandardMaterial color="#fff6e0" emissive="#ffe2a8" emissiveIntensity={lightsOn ? 2 : 0.03} toneMapped={false} />
         </mesh>
-        <pointLight intensity={14} distance={13} decay={1.6} color="#ffe6c2" />
+        <pointLight intensity={lightsOn ? 14 : 0} distance={13} decay={1.6} color="#ffe6c2" />
       </group>
     </group>
   );

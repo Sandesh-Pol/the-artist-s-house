@@ -26,6 +26,7 @@ function useImageTexture(url?: string) {
 export function Frame({ slot, roomId }: { slot: FrameSlot; roomId: string }) {
   const art = useGallery((s) => artworkFor(s.uploads, slot.id));
   const curate = useGallery((s) => s.curate);
+  const lightsOn = useGallery((s) => s.lightsOn);
   const tex = useImageTexture(art?.image);
   const [hover, setHover] = useState(false);
   const group = useRef<THREE.Group>(null);

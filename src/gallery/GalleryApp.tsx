@@ -164,41 +164,32 @@ function HomeControls() {
 
 function ThemePicker() {
   const { theme, setTheme } = useGallery();
-  const [open, setOpen] = useState(false);
+  const nextTheme = THEMES.find((t) => t.id !== theme) ?? THEMES[0]!;
   return (
-    <div className="relative">
+    <button
+      className={`rounded-full p-1.5 transition hover:text-primary ${theme === "evening" ? "text-primary" : ""}`}
+      onClick={() => setTheme(nextTheme.id)}
+      aria-label={`Switch to ${nextTheme.name}`}
+      title={`Switch to ${nextTheme.name}`}
+    >
+      <Palette size={15} />
+    </button>
+  );
+}
+
+function FloatingControls() {
+  return (
+    <div className="glass pointer-events-auto absolute right-4 top-20 z-20 flex flex-col items-center gap-1 rounded-full p-1 animate-fade md:right-6 md:top-24">
+      <HomeControls />
+      <ThemePicker />
       <button
-        className="rounded-full p-1.5 hover:text-primary"
-        onClick={() => setOpen(!open)}
-        aria-label="Change interior theme"
+        className="rounded-full p-1.5 transition hover:text-primary"
+        onClick={() => useGallery.getState().setHelp(true)}
+        aria-label="How to explore"
+        title="Visitor guide"
       >
-        <Palette size={15} />
+        <CircleHelp size={15} />
       </button>
-      {open && (
-        <>
-          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="glass absolute right-0 top-full z-20 mt-2 w-52 rounded-md p-2 animate-rise">
-            <p className="px-2 pb-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Interior theme</p>
-            {THEMES.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => {
-                  setTheme(t.id);
-                  setOpen(false);
-                }}
-                className={`flex w-full items-center gap-3 rounded-sm px-2 py-2 text-left text-sm transition hover:bg-accent ${theme === t.id ? "text-primary" : ""}`}
-              >
-                <span className="flex overflow-hidden rounded-full border border-border">
-                  {t.swatch.map((c) => (
-                    <span key={c} className="block size-4" style={{ background: c }} />
-                  ))}
-                </span>
-                {t.name}
-              </button>
-            ))}
-          </div>
-        </>
-      )}
     </div>
   );
 }
@@ -206,7 +197,7 @@ function ThemePicker() {
 export function GalleryApp() {
   const ref = useRef<HTMLDivElement>(null);
   const { entered, curate, setCurate, setPanel, setAddingFrame, loadUploads } = useGallery();
-  const [showMap, setShowMap] = useState(true);
+  const [showMap, setShowMap] = useState(false);
   useControls(ref);
   useEffect(() => {
     void loadUploads();
@@ -226,16 +217,6 @@ export function GalleryApp() {
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("about")}>About</button>
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("contact")}>Contact</button>
               <a className="rounded-full p-1.5 hover:text-primary" href={ARTIST.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={15} /></a>
-              <HomeControls />
-              <ThemePicker />
-              <button
-                className="rounded-full p-1.5 transition hover:text-primary"
-                onClick={() => useGallery.getState().setHelp(true)}
-                aria-label="How to explore"
-                title="Visitor guide"
-              >
-                <CircleHelp size={15} />
-              </button>
               <button
                 className={`rounded-full px-3 py-1.5 transition ${curate ? "bg-primary text-primary-foreground" : "hover:text-primary"}`}
                 onClick={() => setCurate(!curate)}
@@ -244,6 +225,7 @@ export function GalleryApp() {
               </button>
             </nav>
           </header>
+          <FloatingControls />
           <div className="flex flex-col gap-3">
             <RoomTitle />
             <div className="flex items-end justify-between gap-3">

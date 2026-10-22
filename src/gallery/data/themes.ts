@@ -13,11 +13,11 @@ export const THEMES: Theme[] = [
   {
     id: "gallery-white",
     name: "Clean White",
-    wall: "#f5f3ee",
+    wall: "#ffffff",
     trim: "#fbfaf6",
     ceiling: "#fbfaf6",
     sky: "#eef0f1",
-    swatch: ["#f5f3ee", "#fbfaf6", "#c9c2b4"],
+    swatch: ["#ffffff", "#fbfaf6", "#c9c2b4"],
   },
   {
     id: "evening",

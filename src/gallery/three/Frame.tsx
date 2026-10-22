@@ -35,6 +35,10 @@ export function Frame({ slot, roomId }: { slot: FrameSlot; roomId: string }) {
     const g = group.current;
     if (!g) return;
     const target = hover ? 0.12 : 0;
+    if (Math.abs(target - g.position.z) < 0.001) {
+      g.position.z = target;
+      return;
+    }
     g.position.z += (target - g.position.z) * (1 - Math.exp(-10 * dt));
   });
 

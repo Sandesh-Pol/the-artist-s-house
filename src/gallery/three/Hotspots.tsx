@@ -149,6 +149,10 @@ function HotspotProp({ h }: { h: Hotspot }) {
   useFrame((_, dt) => {
     if (!g.current) return;
     const target = hover || active ? 1.12 : 1;
+    if (Math.abs(target - g.current.scale.x) < 0.001) {
+      g.current.scale.setScalar(target);
+      return;
+    }
     const k = 1 - Math.exp(-10 * dt);
     g.current.scale.setScalar(g.current.scale.x + (target - g.current.scale.x) * k);
   });

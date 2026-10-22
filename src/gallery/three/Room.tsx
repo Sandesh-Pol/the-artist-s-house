@@ -25,7 +25,7 @@ function Box({ x0, x1, y0, y1, mat }: { x0: number; x1: number; y0: number; y1: 
   );
 }
 
-function Wall({ room, side, mat, trim }: { room: RoomT; side: Side; mat: THREE.Material; trim: THREE.Material }) {
+function Wall({ room, side, mat, trim, lowPower }: { room: RoomT; side: Side; mat: THREE.Material; trim: THREE.Material; lowPower: boolean }) {
   const customSlots = useGallery((s) => s.customSlots);
   const door = room.doors.find((d) => d.side === side);
   const hasWindow = room.windows.includes(side);
@@ -63,7 +63,7 @@ function Wall({ room, side, mat, trim }: { room: RoomT; side: Side; mat: THREE.M
         <boxGeometry args={[CELL - 0.2, 0.14, 0.03]} />
       </mesh>
       {hasWindow && (
-        <Window y={Math.min(h / 2 + 0.2, 2.4)} trim={trim} tall={h > STOREY} u={room.windowU?.[side] ?? 0} />
+          <Window y={Math.min(h / 2 + 0.2, 2.4)} trim={trim} tall={h > STOREY} u={room.windowU?.[side] ?? 0} lowPower={lowPower} />
       )}
       {wallSlots.map((s) => (
         <group key={s.id} position={[s.u, s.y ?? 1.75, 0.1]}>
@@ -130,7 +130,7 @@ function ViewPlane({ w, h, url, lit }: { w: number; h: number; url: string; lit:
   );
 }
 
-function Window({ y, trim, tall, u = 0 }: { y: number; trim: THREE.Material; tall: boolean; u?: number }) {
+function Window({ y, trim, tall, u = 0, lowPower }: { y: number; trim: THREE.Material; tall: boolean; u?: number; lowPower: boolean }) {
   const curtainsOpen = useGallery((s) => s.curtainsOpen);
   const windowView = useGallery((s) => s.windowView);
   const w = 3.4;
@@ -165,7 +165,7 @@ function Window({ y, trim, tall, u = 0 }: { y: number; trim: THREE.Material; tal
           <boxGeometry args={[w, 0.07, 0.06]} />
         </mesh>
       ))}
-      <pointLight position={[0, 0, 1.2]} intensity={curtainsOpen ? 6 : 0.4} distance={8} color="#fff4e0" />
+      {!lowPower && <pointLight position={[0, 0, 1.2]} intensity={curtainsOpen ? 6 : 0.4} distance={8} color="#fff4e0" />}
       <Curtains w={w} h={h} />
     </group>
   );
@@ -210,7 +210,7 @@ function Stairs({ wood, trim }: { wood: THREE.Material; trim: THREE.Material }) 
   );
 }
 
-export function Room({ room }: { room: RoomT }) {
+export function Room({ room, lowPower }: { room: RoomT; lowPower: boolean }) {
   const [cx, cy, cz] = roomCenter(room);
   const theme = themeById(useGallery((s) => s.theme));
   const lightsOn = useGallery((s) => s.lightsOn);
@@ -233,7 +233,7 @@ export function Room({ room }: { room: RoomT }) {
         <planeGeometry args={[CELL, CELL]} />
       </mesh>
       {(["n", "e", "s", "w"] as Side[]).map((s) => (
-        <Wall key={s} room={room} side={s} mat={mats.wall} trim={mats.trim} />
+        <Wall key={s} room={room} side={s} mat={mats.wall} trim={mats.trim} lowPower={lowPower} />
       ))}
       {room.stairs && <Stairs wood={mats.floor} trim={mats.trim} />}
       <Furniture roomId={room.id} rug={mats.rug} />
@@ -248,7 +248,7 @@ export function Room({ room }: { room: RoomT }) {
           <sphereGeometry args={[0.22, 24, 16]} />
           <meshStandardMaterial color="#fff6e0" emissive="#ffe2a8" emissiveIntensity={lightsOn ? 2 : 0.03} toneMapped={false} />
         </mesh>
-        <pointLight intensity={lightsOn ? 14 : 0} distance={13} decay={1.6} color="#ffe6c2" />
+        {!lowPower && <pointLight intensity={lightsOn ? 14 : 0} distance={13} decay={1.6} color="#ffe6c2" />}
       </group>
     </group>
   );

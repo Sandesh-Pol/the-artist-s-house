@@ -49,11 +49,11 @@ export function woodTexture() {
       c.fillStyle = "rgba(40,22,10,0.5)";
       c.fillRect(0, i * ph, s, 2);
     }
-  }, [3, 3]);
+  }, [2, 2]);
 }
 
 export function plasterTexture() {
-  return canvasTex("plaster", 512, (c, s) => {
+  return canvasTex("plaster", 256, (c, s) => {
     const r = rng(3);
     c.fillStyle = "#ffffff";
     c.fillRect(0, 0, s, s);
@@ -62,11 +62,11 @@ export function plasterTexture() {
       const z = 2 + r() * 14;
       c.fillRect(r() * s, r() * s, z, z);
     }
-  }, [2, 1]);
+  }, [1, 1]);
 }
 
 export function rugTexture() {
-  return canvasTex("rug", 512, (c, s) => {
+  return canvasTex("rug", 256, (c, s) => {
     c.fillStyle = "#b5654a";
     c.fillRect(0, 0, s, s);
     c.strokeStyle = "#ead9bf";

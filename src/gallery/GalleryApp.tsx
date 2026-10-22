@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram, Palette, Plus, Lightbulb, Blinds, Map as MapIcon, CircleHelp } from "lucide-react";
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram, Palette, Plus, Lightbulb, Blinds, Map as MapIcon, CircleHelp, LockKeyhole, Delete } from "lucide-react";
 import { House } from "./three/House";
 import { dragState } from "./three/dragState";
 import { ROOMS } from "./data/rooms";
@@ -137,6 +137,73 @@ function Intro() {
   );
 }
 
+const ENTRY_PIN = "1625";
+
+function EntryLock({ onUnlock }: { onUnlock: () => void }) {
+  const [pin, setPin] = useState("");
+  const [error, setError] = useState(false);
+
+  const submit = (value: string) => {
+    const next = value.slice(0, 4);
+    setPin(next);
+    setError(false);
+    if (next.length !== 4) return;
+    if (next === ENTRY_PIN) {
+      onUnlock();
+      return;
+    }
+    setPin("");
+    setError(true);
+  };
+
+  const press = (digit: string) => submit(`${pin}${digit}`);
+  const remove = () => submit(pin.slice(0, -1));
+
+  return (
+    <div className="absolute inset-0 z-40 flex items-center justify-center bg-ink/80 p-6 text-center animate-fade">
+      <div className="w-full max-w-xs rounded-lg bg-background/95 p-6 shadow-soft animate-rise">
+        <div className="mx-auto grid size-12 place-items-center rounded-full bg-accent text-primary">
+          <LockKeyhole size={22} />
+        </div>
+        <p className="mt-4 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Private residence</p>
+        <h1 className="mt-2 font-display text-3xl">Enter the house</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Enter the four-digit passcode to unlock the gallery.</p>
+        <form className="mt-5" onSubmit={(event) => { event.preventDefault(); submit(pin); }}>
+          <input
+            autoFocus
+            type="password"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            maxLength={4}
+            value={pin}
+            onChange={(event) => submit(event.target.value.replace(/\D/g, ""))}
+            aria-label="Four-digit passcode"
+            className="sr-only"
+          />
+          <div className="mb-4 flex justify-center gap-3" aria-label={`${pin.length} of 4 digits entered`}>
+            {[0, 1, 2, 3].map((i) => (
+              <span key={i} className={`size-3 rounded-full border border-primary ${i < pin.length ? "bg-primary" : "bg-transparent"}`} />
+            ))}
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((digit) => (
+              <button key={digit} type="button" onClick={() => press(digit)} className="glass-lite grid h-11 place-items-center rounded-md text-lg transition hover:text-primary">
+                {digit}
+              </button>
+            ))}
+            <span />
+            <button type="button" onClick={() => press("0")} className="glass-lite grid h-11 place-items-center rounded-md text-lg transition hover:text-primary">0</button>
+            <button type="button" onClick={remove} aria-label="Delete last digit" className="glass-lite grid h-11 place-items-center rounded-md transition hover:text-primary">
+              <Delete size={18} />
+            </button>
+          </div>
+          <p className={`mt-4 h-4 text-xs text-destructive ${error ? "opacity-100" : "opacity-0"}`} role="alert">Incorrect passcode</p>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 function HomeControls() {
   const { lightsOn, curtainsOpen, toggleLights, toggleCurtains } = useGallery();
   const btn = "rounded-full p-1.5 transition hover:text-primary";
@@ -197,6 +264,7 @@ function FloatingControls() {
 export function GalleryApp() {
   const ref = useRef<HTMLDivElement>(null);
   const { entered, curate, setCurate, setPanel, setAddingFrame, loadUploads } = useGallery();
+  const [unlocked, setUnlocked] = useState(false);
   const [showMap, setShowMap] = useState(false);
   useControls(ref);
   useEffect(() => {
@@ -208,8 +276,9 @@ export function GalleryApp() {
       <div ref={ref} className="absolute inset-0 touch-none">
         <House />
       </div>
-      {!entered && <Intro />}
-      {entered && (
+      {!unlocked && <EntryLock onUnlock={() => setUnlocked(true)} />}
+      {unlocked && !entered && <Intro />}
+      {unlocked && entered && (
         <div className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-4 md:p-6">
           <header className="pointer-events-auto flex items-center justify-between gap-3 animate-fade">
             <span className="whitespace-nowrap font-display text-lg tracking-wide md:text-2xl">{ARTIST.name}</span>

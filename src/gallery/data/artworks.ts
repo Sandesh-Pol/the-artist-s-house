@@ -10,6 +10,8 @@ export interface Artwork {
   year?: string;
   description?: string;
   story?: string;
+  w?: number; // frame width override (m)
+  h?: number; // frame height override (m)
 }
 
 // Default artworks keyed by frame slot id (see rooms.ts). Uploads override these.

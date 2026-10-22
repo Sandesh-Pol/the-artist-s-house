@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram, Palette, Plus, Lightbulb, Blinds, Map as MapIcon } from "lucide-react";
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram, Palette, Plus, Lightbulb, Blinds, Map as MapIcon, CircleHelp } from "lucide-react";
 import { House } from "./three/House";
 import { dragState } from "./three/dragState";
 import { ROOMS } from "./data/rooms";
@@ -11,10 +11,13 @@ import { ArtworkModal } from "./ui/ArtworkModal";
 import { EditDialog } from "./ui/EditDialog";
 import { AddFrameDialog } from "./ui/AddFrameDialog";
 import { InfoPanel } from "./ui/InfoPanel";
+import { HotspotCard } from "./ui/HotspotCard";
+import { HelpDialog } from "./ui/HelpDialog";
+import { WindowViewDialog } from "./ui/WindowViewDialog";
 
 const blocked = () => {
   const s = useGallery.getState();
-  return !s.entered || !!s.selected || !!s.editing || !!s.panel;
+  return !s.entered || !!s.selected || !!s.editing || !!s.panel || s.help || !!s.hotspot;
 };
 
 function useControls(el: React.RefObject<HTMLDivElement | null>) {
@@ -225,7 +228,16 @@ export function GalleryApp() {
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("contact")}>Contact</button>
               <a className="rounded-full p-1.5 hover:text-primary" href={ARTIST.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={15} /></a>
               <HomeControls />
+              <WindowViewDialog />
               <ThemePicker />
+              <button
+                className="rounded-full p-1.5 transition hover:text-primary"
+                onClick={() => useGallery.getState().setHelp(true)}
+                aria-label="How to explore"
+                title="Visitor guide"
+              >
+                <CircleHelp size={15} />
+              </button>
               <button
                 className={`rounded-full px-3 py-1.5 transition ${curate ? "bg-primary text-primary-foreground" : "hover:text-primary"}`}
                 onClick={() => setCurate(!curate)}
@@ -270,6 +282,8 @@ export function GalleryApp() {
       <EditDialog />
       <AddFrameDialog />
       <InfoPanel />
+      <HotspotCard />
+      <HelpDialog />
     </div>
   );
 }

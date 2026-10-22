@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram, Palette, Plus } from "lucide-react";
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram, Palette, Plus, Lightbulb, Blinds, Map as MapIcon } from "lucide-react";
 import { House } from "./three/House";
 import { dragState } from "./three/dragState";
 import { ROOMS } from "./data/rooms";
@@ -91,7 +91,7 @@ function useControls(el: React.RefObject<HTMLDivElement | null>) {
 
 function NavPad() {
   const { step, turn, roomIndex } = useGallery();
-  const btn = "glass grid size-11 place-items-center rounded-full text-foreground transition hover:text-primary disabled:opacity-30";
+  const btn = "glass-lite grid size-11 place-items-center rounded-full text-foreground transition hover:text-primary disabled:opacity-30";
   return (
     <div className="pointer-events-auto grid grid-cols-3 gap-1.5">
       <span />
@@ -198,6 +198,7 @@ export function GalleryApp() {
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("about")}>About</button>
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("contact")}>Contact</button>
               <a className="rounded-full p-1.5 hover:text-primary" href={ARTIST.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={15} /></a>
+              <HomeControls />
               <ThemePicker />
               <button
                 className={`rounded-full px-3 py-1.5 transition ${curate ? "bg-primary text-primary-foreground" : "hover:text-primary"}`}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { X, Upload } from "lucide-react";
 import { ROOMS } from "../data/rooms";
-import { useGallery, artworkFor } from "../store";
+import { useGallery, artworkFor, slotFor } from "../store";
 import type { Artwork } from "../data/artworks";
 
 // Downscale uploads so they stay light in browser storage and on the GPU.
@@ -25,16 +25,41 @@ function readImage(file: File): Promise<string> {
 
 const field = "w-full rounded-sm border border-input bg-card px-3 py-2 text-sm outline-none focus:border-primary";
 
+function SizeSlider({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
+  return (
+    <label className="block text-xs text-muted-foreground">
+      <span className="flex justify-between">
+        <span>{label}</span>
+        <span>{value.toFixed(2)} m</span>
+      </span>
+      <input
+        type="range"
+        min={0.6}
+        max={3.2}
+        step={0.05}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="mt-1 w-full accent-primary"
+      />
+    </label>
+  );
+}
+
 export function EditDialog() {
-  const { editing, uploads, edit, saveArtwork } = useGallery();
+  const { editing, uploads, customSlots, edit, saveArtwork, removeSlot } = useGallery();
   const [form, setForm] = useState<Artwork>({ title: "", image: "" });
 
   useEffect(() => {
-    if (editing) setForm(artworkFor(uploads, editing) ?? { title: "", image: "" });
+    if (!editing) return;
+    const slot = slotFor(useGallery.getState().customSlots, editing);
+    const art = artworkFor(useGallery.getState().uploads, editing) ?? { title: "", image: "" };
+    setForm({ ...art, w: art.w ?? slot?.w ?? 1.4, h: art.h ?? slot?.h ?? 1.8 });
   }, [editing]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!editing) return null;
-  const room = ROOMS.find((r) => r.slots.some((s) => s.id === editing));
+  const slot = slotFor(customSlots, editing);
+  const room = ROOMS.find((r) => r.id === slot?.roomId) ?? ROOMS.find((r) => r.slots.some((s) => s.id === editing));
+  const isCustom = customSlots.some((s) => s.id === editing);
   const set = (k: keyof Artwork) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm({ ...form, [k]: e.target.value });
 
@@ -78,6 +103,10 @@ export function EditDialog() {
           </div>
           <textarea className={field} rows={2} placeholder="Description" value={form.description ?? ""} onChange={set("description")} />
           <textarea className={field} rows={3} placeholder="The story behind it" value={form.story ?? ""} onChange={set("story")} />
+          <div className="grid grid-cols-2 gap-3 rounded-sm border border-border bg-card p-3">
+            <SizeSlider label="Frame width" value={form.w ?? 1.4} onChange={(w) => setForm({ ...form, w })} />
+            <SizeSlider label="Frame height" value={form.h ?? 1.8} onChange={(h) => setForm({ ...form, h })} />
+          </div>
         </div>
         <div className="mt-5 flex items-center gap-3">
           <button type="submit" disabled={!form.image || !form.title} className="rounded-sm bg-primary px-5 py-2.5 text-sm text-primary-foreground transition hover:opacity-90 disabled:opacity-40">
@@ -86,6 +115,11 @@ export function EditDialog() {
           {uploads[editing] && (
             <button type="button" onClick={() => { saveArtwork(editing, null); edit(null); }} className="text-sm text-muted-foreground underline">
               Remove
+            </button>
+          )}
+          {isCustom && (
+            <button type="button" onClick={() => removeSlot(editing)} className="ml-auto text-sm text-destructive underline">
+              Take frame down
             </button>
           )}
         </div>

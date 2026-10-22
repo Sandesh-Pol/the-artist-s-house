@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { CELL, STOREY, roomCenter, type Room as RoomT, type Side } from "../data/rooms";
+import { themeById } from "../data/themes";
+import { useGallery } from "../store";
 import { plasterTexture, rugTexture, woodTexture } from "./textures";
 import { Frame } from "./Frame";
 import { Furniture } from "./Furniture";

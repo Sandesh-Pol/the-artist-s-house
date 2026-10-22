@@ -37,9 +37,11 @@ export function Frame({ slot, roomId }: { slot: FrameSlot; roomId: string }) {
     g.position.z += (target - g.position.z) * (1 - Math.exp(-10 * dt));
   });
 
-  // fit image inside the slot preserving aspect
-  let iw = slot.w * 0.78;
-  let ih = slot.h * 0.78;
+  // fit image inside the slot preserving aspect; artwork can override frame size
+  const sw = art?.w ?? slot.w;
+  const sh = art?.h ?? slot.h;
+  let iw = sw * 0.78;
+  let ih = sh * 0.78;
   if (tex?.image) {
     const img = tex.image as { width: number; height: number };
     const a = img.width / img.height;

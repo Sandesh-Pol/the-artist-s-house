@@ -4,8 +4,8 @@ import { ROOMS } from "../data/rooms";
 import { useGallery, artworkFor, filledSlots } from "../store";
 
 export function ArtworkModal() {
-  const { selected, uploads, select, edit, face } = useGallery();
-  const list = filledSlots(uploads);
+  const { selected, uploads, customSlots, select, edit, face } = useGallery();
+  const list = filledSlots(uploads, customSlots);
   const idx = list.findIndex((s) => s.id === selected);
 
   useEffect(() => {

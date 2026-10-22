@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { CELL, STOREY, roomCenter, type Room as RoomT, type Side } from "../data/rooms";
+import { themeById } from "../data/themes";
+import { useGallery } from "../store";
 import { plasterTexture, rugTexture, woodTexture } from "./textures";
 import { Frame } from "./Frame";
 import { Furniture } from "./Furniture";
@@ -22,12 +24,17 @@ function Box({ x0, x1, y0, y1, mat }: { x0: number; x1: number; y0: number; y1: 
 }
 
 function Wall({ room, side, mat, trim }: { room: RoomT; side: Side; mat: THREE.Material; trim: THREE.Material }) {
+  const customSlots = useGallery((s) => s.customSlots);
   const door = room.doors.find((d) => d.side === side);
   const hasWindow = room.windows.includes(side);
   const h = room.height;
   const half = CELL / 2;
   const [px, pz] = POS[side];
   const db = door?.bottom ?? 0;
+  const wallSlots = [
+    ...room.slots.filter((s) => s.side === side),
+    ...customSlots.filter((s) => s.roomId === room.id && s.side === side),
+  ];
   return (
     <group position={[px, 0, pz]} rotation-y={ROT[side]}>
       {door ? (
@@ -54,13 +61,11 @@ function Wall({ room, side, mat, trim }: { room: RoomT; side: Side; mat: THREE.M
         <boxGeometry args={[CELL - 0.2, 0.14, 0.03]} />
       </mesh>
       {hasWindow && <Window y={Math.min(h / 2 + 0.2, 2.4)} trim={trim} tall={h > STOREY} />}
-      {room.slots
-        .filter((s) => s.side === side)
-        .map((s) => (
-          <group key={s.id} position={[s.u, s.y ?? 1.75, 0.1]}>
-            <Frame slot={s} roomId={room.id} />
-          </group>
-        ))}
+      {wallSlots.map((s) => (
+        <group key={s.id} position={[s.u, s.y ?? 1.75, 0.1]}>
+          <Frame slot={s} roomId={room.id} />
+        </group>
+      ))}
     </group>
   );
 }
@@ -131,14 +136,16 @@ function Stairs({ wood, trim }: { wood: THREE.Material; trim: THREE.Material }) 
 
 export function Room({ room }: { room: RoomT }) {
   const [cx, cy, cz] = roomCenter(room);
+  const theme = themeById(useGallery((s) => s.theme));
+  const wallColor = theme.wall ?? room.wallTone;
   const mats = useMemo(() => {
-    const wall = new THREE.MeshStandardMaterial({ color: room.wallTone, map: plasterTexture(), roughness: 0.95 });
+    const wall = new THREE.MeshStandardMaterial({ color: wallColor, map: plasterTexture(), roughness: 0.95 });
     const floor = new THREE.MeshStandardMaterial({ map: woodTexture(), roughness: 0.55 });
-    const ceiling = new THREE.MeshStandardMaterial({ color: "#f7f3ec", emissive: "#efe6d6", emissiveIntensity: 0.35, roughness: 1 });
-    const trim = new THREE.MeshStandardMaterial({ color: "#f3eee5", roughness: 0.6 });
+    const ceiling = new THREE.MeshStandardMaterial({ color: theme.ceiling, emissive: theme.ceiling, emissiveIntensity: 0.35, roughness: 1 });
+    const trim = new THREE.MeshStandardMaterial({ color: theme.trim, roughness: 0.6 });
     const rug = new THREE.MeshStandardMaterial({ map: rugTexture(), roughness: 1 });
     return { wall, floor, ceiling, trim, rug };
-  }, [room.wallTone]);
+  }, [wallColor, theme.ceiling, theme.trim]);
 
   return (
     <group position={[cx, cy, cz]}>

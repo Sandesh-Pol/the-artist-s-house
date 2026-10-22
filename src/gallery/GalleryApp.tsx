@@ -1,13 +1,15 @@
-import { useEffect, useRef } from "react";
-import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram, Palette, Plus } from "lucide-react";
 import { House } from "./three/House";
 import { dragState } from "./three/dragState";
 import { ROOMS } from "./data/rooms";
+import { THEMES } from "./data/themes";
 import { ARTIST } from "./data/artist";
 import { useGallery } from "./store";
 import { FloorMap } from "./ui/FloorMap";
 import { ArtworkModal } from "./ui/ArtworkModal";
 import { EditDialog } from "./ui/EditDialog";
+import { AddFrameDialog } from "./ui/AddFrameDialog";
 import { InfoPanel } from "./ui/InfoPanel";
 
 const blocked = () => {
@@ -133,9 +135,50 @@ function Intro() {
   );
 }
 
+function ThemePicker() {
+  const { theme, setTheme } = useGallery();
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        className="rounded-full p-1.5 hover:text-primary"
+        onClick={() => setOpen(!open)}
+        aria-label="Change interior theme"
+      >
+        <Palette size={15} />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="glass absolute right-0 top-full z-20 mt-2 w-52 rounded-md p-2 animate-rise">
+            <p className="px-2 pb-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Interior theme</p>
+            {THEMES.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => {
+                  setTheme(t.id);
+                  setOpen(false);
+                }}
+                className={`flex w-full items-center gap-3 rounded-sm px-2 py-2 text-left text-sm transition hover:bg-accent ${theme === t.id ? "text-primary" : ""}`}
+              >
+                <span className="flex overflow-hidden rounded-full border border-border">
+                  {t.swatch.map((c) => (
+                    <span key={c} className="block size-4" style={{ background: c }} />
+                  ))}
+                </span>
+                {t.name}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export function GalleryApp() {
   const ref = useRef<HTMLDivElement>(null);
-  const { entered, curate, setCurate, setPanel, loadUploads } = useGallery();
+  const { entered, curate, setCurate, setPanel, setAddingFrame, loadUploads } = useGallery();
   useControls(ref);
   useEffect(() => {
     void loadUploads();
@@ -155,6 +198,7 @@ export function GalleryApp() {
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("about")}>About</button>
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("contact")}>Contact</button>
               <a className="rounded-full p-1.5 hover:text-primary" href={ARTIST.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={15} /></a>
+              <ThemePicker />
               <button
                 className={`rounded-full px-3 py-1.5 transition ${curate ? "bg-primary text-primary-foreground" : "hover:text-primary"}`}
                 onClick={() => setCurate(!curate)}
@@ -173,12 +217,21 @@ export function GalleryApp() {
         </div>
       )}
       {curate && entered && (
-        <p className="glass pointer-events-none absolute left-1/2 top-20 z-20 -translate-x-1/2 rounded-full px-4 py-2 text-xs animate-rise">
-          Curator mode — tap any frame to hang or edit a painting
-        </p>
+        <div className="absolute left-1/2 top-20 z-20 flex -translate-x-1/2 items-center gap-2 animate-rise">
+          <p className="glass pointer-events-none rounded-full px-4 py-2 text-xs">
+            Curator mode — tap any frame to hang or edit a painting
+          </p>
+          <button
+            className="glass pointer-events-auto flex items-center gap-1.5 rounded-full px-4 py-2 text-xs text-primary transition hover:opacity-80"
+            onClick={() => setAddingFrame(true)}
+          >
+            <Plus size={14} /> New frame
+          </button>
+        </div>
       )}
       <ArtworkModal />
       <EditDialog />
+      <AddFrameDialog />
       <InfoPanel />
     </div>
   );

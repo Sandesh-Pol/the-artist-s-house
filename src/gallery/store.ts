@@ -21,7 +21,6 @@ interface GalleryState {
   curtainsOpen: boolean;
   hotspot: string | null;
   help: boolean;
-  windowView: string;
   uploads: Record<string, Artwork>;
   customSlots: CustomSlot[];
   enter: () => void;
@@ -40,7 +39,6 @@ interface GalleryState {
   toggleCurtains: () => void;
   setHotspot: (id: string | null) => void;
   setHelp: (v: boolean) => void;
-  setWindowView: (dataUrl: string) => void;
   saveArtwork: (id: string, a: Artwork | null) => void;
   addSlot: (s: CustomSlot) => void;
   removeSlot: (id: string) => void;
@@ -49,7 +47,6 @@ interface GalleryState {
 
 const KEY = "gallery-uploads-v1";
 const PREFS_KEY = "gallery-prefs-v1";
-const VIEW_KEY = "gallery-windowview-v1";
 
 interface Prefs {
   theme: string;
@@ -81,7 +78,6 @@ export const useGallery = create<GalleryState>((set, get) => ({
   curtainsOpen: true,
   hotspot: null,
   help: false,
-  windowView: "",
   uploads: {},
   customSlots: [],
   enter: () => set({ entered: true }),
@@ -113,10 +109,6 @@ export const useGallery = create<GalleryState>((set, get) => ({
   },
   setHotspot: (hotspot) => set({ hotspot }),
   setHelp: (help) => set({ help }),
-  setWindowView: (windowView) => {
-    set({ windowView });
-    void idbSet(VIEW_KEY, windowView);
-  },
   saveArtwork: (id, a) => {
     const uploads = { ...get().uploads };
     if (a) uploads[id] = a;
@@ -139,10 +131,8 @@ export const useGallery = create<GalleryState>((set, get) => ({
   loadUploads: async () => {
     const u = (await idbGet(KEY)) as Record<string, Artwork> | undefined;
     const p = (await idbGet(PREFS_KEY)) as Prefs | undefined;
-    const v = (await idbGet(VIEW_KEY)) as string | undefined;
     set({
       ...(u ? { uploads: u } : {}),
-      ...(v ? { windowView: v } : {}),
       ...(p?.theme ? { theme: p.theme } : {}),
       ...(p?.customSlots ? { customSlots: p.customSlots } : {}),
       ...(p?.lightsOn !== undefined ? { lightsOn: p.lightsOn } : {}),

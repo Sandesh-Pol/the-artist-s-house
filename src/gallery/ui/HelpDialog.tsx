@@ -1,4 +1,4 @@
-import { X, Move, MousePointerClick, Frame, Lightbulb, Blinds, Palette, Map as MapIcon, Image as ImageIcon, Pencil } from "lucide-react";
+import { X, Move, MousePointerClick, Frame, Lightbulb, Blinds, Palette, Map as MapIcon, Pencil } from "lucide-react";
 import { useGallery } from "../store";
 
 const ITEMS: { icon: React.ReactNode; title: string; text: string }[] = [
@@ -28,14 +28,9 @@ const ITEMS: { icon: React.ReactNode; title: string; text: string }[] = [
     text: "The blinds button opens or closes all curtains. Closed curtains dim the daylight coming in.",
   },
   {
-    icon: <ImageIcon size={15} />,
-    title: "Window view",
-    text: "The picture button lets you hang your own photo outside the windows — a garden, a city, anything.",
-  },
-  {
     icon: <Palette size={15} />,
     title: "Interior themes",
-    text: "The palette button repaints the whole house: gallery white, warm plaster, soft sage or evening.",
+    text: "The palette button switches the whole house between clean gallery white and evening light.",
   },
   {
     icon: <MapIcon size={15} />,

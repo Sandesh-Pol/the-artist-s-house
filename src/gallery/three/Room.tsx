@@ -1,5 +1,5 @@
-import { Suspense, useMemo, useRef } from "react";
-import { useFrame, useLoader } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { CELL, STOREY, roomCenter, type Room as RoomT, type Side } from "../data/rooms";
 import { themeById } from "../data/themes";
@@ -119,42 +119,17 @@ function Curtains({ w, h }: { w: number; h: number }) {
   );
 }
 
-function ViewPlane({ w, h, url, lit }: { w: number; h: number; url: string; lit: boolean }) {
-  const tex = useLoader(THREE.TextureLoader, url);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return (
-    <mesh>
-      <planeGeometry args={[w, h]} />
-      <meshStandardMaterial map={tex} emissiveMap={tex} emissive="#ffffff" emissiveIntensity={lit ? 0.55 : 0.12} toneMapped={false} />
-    </mesh>
-  );
-}
-
 function Window({ y, trim, tall, u = 0, lowPower }: { y: number; trim: THREE.Material; tall: boolean; u?: number; lowPower: boolean }) {
   const curtainsOpen = useGallery((s) => s.curtainsOpen);
-  const windowView = useGallery((s) => s.windowView);
   const w = 3.4;
   const h = tall ? 5 : 2.6;
   const cy = tall ? 4.5 : y;
   return (
     <group position={[u, cy, 0.11]}>
-      {windowView ? (
-        <Suspense
-          fallback={
-            <mesh>
-              <planeGeometry args={[w, h]} />
-              <meshStandardMaterial color="#dfeaf0" />
-            </mesh>
-          }
-        >
-          <ViewPlane w={w} h={h} url={windowView} lit={curtainsOpen} />
-        </Suspense>
-      ) : (
-        <mesh>
-          <planeGeometry args={[w, h]} />
-          <meshStandardMaterial color="#dfeaf0" emissive="#f4efe2" emissiveIntensity={curtainsOpen ? 1.1 : 0.2} toneMapped={false} />
-        </mesh>
-      )}
+      <mesh>
+        <planeGeometry args={[w, h]} />
+        <meshStandardMaterial color="#dfeaf0" emissive="#f4efe2" emissiveIntensity={curtainsOpen ? 1.1 : 0.2} toneMapped={false} />
+      </mesh>
       {[-w / 2, 0, w / 2].map((x) => (
         <mesh key={x} position={[x, 0, 0.03]} material={trim}>
           <boxGeometry args={[0.07, h, 0.06]} />

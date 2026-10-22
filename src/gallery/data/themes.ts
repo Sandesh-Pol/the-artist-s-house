@@ -12,7 +12,7 @@ export interface Theme {
 export const THEMES: Theme[] = [
   {
     id: "gallery-white",
-    name: "Gallery White",
+    name: "Clean White",
     wall: "#f5f3ee",
     trim: "#fbfaf6",
     ceiling: "#fbfaf6",
@@ -20,26 +20,8 @@ export const THEMES: Theme[] = [
     swatch: ["#f5f3ee", "#fbfaf6", "#c9c2b4"],
   },
   {
-    id: "warm-plaster",
-    name: "Warm Plaster",
-    wall: null,
-    trim: "#f3eee5",
-    ceiling: "#f7f3ec",
-    sky: "#e9e1d3",
-    swatch: ["#ece4d6", "#e6dccb", "#8a6a48"],
-  },
-  {
-    id: "soft-sage",
-    name: "Soft Sage",
-    wall: "#e8ece3",
-    trim: "#f5f7f2",
-    ceiling: "#f6f7f3",
-    sky: "#e5eae5",
-    swatch: ["#e8ece3", "#9db08f", "#f5f7f2"],
-  },
-  {
     id: "evening",
-    name: "Evening Charcoal",
+    name: "Evening Light",
     wall: "#45423d",
     trim: "#5a564f",
     ceiling: "#38352f",

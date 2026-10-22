@@ -13,7 +13,6 @@ import { AddFrameDialog } from "./ui/AddFrameDialog";
 import { InfoPanel } from "./ui/InfoPanel";
 import { HotspotCard } from "./ui/HotspotCard";
 import { HelpDialog } from "./ui/HelpDialog";
-import { WindowViewDialog } from "./ui/WindowViewDialog";
 
 const blocked = () => {
   const s = useGallery.getState();
@@ -228,7 +227,6 @@ export function GalleryApp() {
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("contact")}>Contact</button>
               <a className="rounded-full p-1.5 hover:text-primary" href={ARTIST.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={15} /></a>
               <HomeControls />
-              <WindowViewDialog />
               <ThemePicker />
               <button
                 className="rounded-full p-1.5 transition hover:text-primary"

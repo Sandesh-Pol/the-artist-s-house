@@ -8,6 +8,7 @@ import { CameraRig } from "./CameraRig";
 
 export function House() {
   const sky = themeById(useGallery((s) => s.theme)).sky;
+  const lightsOn = useGallery((s) => s.lightsOn);
   return (
     <Canvas
       dpr={[1, 1.75]}

@@ -204,6 +204,7 @@ function ThemePicker() {
 export function GalleryApp() {
   const ref = useRef<HTMLDivElement>(null);
   const { entered, curate, setCurate, setPanel, setAddingFrame, loadUploads } = useGallery();
+  const [showMap, setShowMap] = useState(true);
   useControls(ref);
   useEffect(() => {
     void loadUploads();
@@ -237,7 +238,17 @@ export function GalleryApp() {
             <RoomTitle />
             <div className="flex items-end justify-between gap-3">
               <NavPad />
-              <FloorMap />
+              <div className="flex flex-col items-end gap-2">
+                <button
+                  className="glass-lite pointer-events-auto grid size-11 place-items-center rounded-full text-foreground transition hover:text-primary"
+                  onClick={() => setShowMap(!showMap)}
+                  aria-label={showMap ? "Hide floor plan" : "Show floor plan"}
+                  title={showMap ? "Hide floor plan" : "Show floor plan"}
+                >
+                  <MapIcon size={17} />
+                </button>
+                {showMap && <FloorMap />}
+              </div>
             </div>
           </div>
         </div>

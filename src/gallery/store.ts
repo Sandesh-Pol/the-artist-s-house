@@ -49,6 +49,7 @@ interface GalleryState {
 
 const KEY = "gallery-uploads-v1";
 const PREFS_KEY = "gallery-prefs-v1";
+const VIEW_KEY = "gallery-windowview-v1";
 
 interface Prefs {
   theme: string;
@@ -78,6 +79,9 @@ export const useGallery = create<GalleryState>((set, get) => ({
   theme: "gallery-white",
   lightsOn: true,
   curtainsOpen: true,
+  hotspot: null,
+  help: false,
+  windowView: "",
   uploads: {},
   customSlots: [],
   enter: () => set({ entered: true }),
@@ -107,6 +111,12 @@ export const useGallery = create<GalleryState>((set, get) => ({
     set({ curtainsOpen: !get().curtainsOpen });
     savePrefs(get());
   },
+  setHotspot: (hotspot) => set({ hotspot }),
+  setHelp: (help) => set({ help }),
+  setWindowView: (windowView) => {
+    set({ windowView });
+    void idbSet(VIEW_KEY, windowView);
+  },
   saveArtwork: (id, a) => {
     const uploads = { ...get().uploads };
     if (a) uploads[id] = a;
@@ -129,8 +139,10 @@ export const useGallery = create<GalleryState>((set, get) => ({
   loadUploads: async () => {
     const u = (await idbGet(KEY)) as Record<string, Artwork> | undefined;
     const p = (await idbGet(PREFS_KEY)) as Prefs | undefined;
+    const v = (await idbGet(VIEW_KEY)) as string | undefined;
     set({
       ...(u ? { uploads: u } : {}),
+      ...(v ? { windowView: v } : {}),
       ...(p?.theme ? { theme: p.theme } : {}),
       ...(p?.customSlots ? { customSlots: p.customSlots } : {}),
       ...(p?.lightsOn !== undefined ? { lightsOn: p.lightsOn } : {}),

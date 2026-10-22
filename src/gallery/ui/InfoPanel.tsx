@@ -1,4 +1,4 @@
-import { X, Instagram, Mail, MapPin } from "lucide-react";
+import { X, Instagram, Mail, MapPin, ExternalLink } from "lucide-react";
 import { ARTIST } from "../data/artist";
 import { useGallery } from "../store";
 import portrait from "@/assets/art-3.jpg";
@@ -35,6 +35,7 @@ export function InfoPanel() {
             <div className="mt-8 grid gap-4">
               <a href={`mailto:${ARTIST.email}`} className="flex items-center gap-3 border-b border-border pb-4 hover:text-primary"><Mail size={18} /> {ARTIST.email}</a>
               <a href={ARTIST.instagram} target="_blank" rel="noreferrer" className="flex items-center gap-3 border-b border-border pb-4 hover:text-primary"><Instagram size={18} /> {ARTIST.instagramHandle}</a>
+              <a href={ARTIST.pinterest} target="_blank" rel="noreferrer" className="flex items-center gap-3 border-b border-border pb-4 hover:text-primary"><ExternalLink size={18} /> {ARTIST.pinterestHandle}</a>
               <p className="flex items-center gap-3 text-muted-foreground"><MapPin size={18} /> {ARTIST.location}</p>
             </div>
             <form

@@ -26,6 +26,7 @@ function useImageTexture(url?: string) {
 export function Frame({ slot, roomId }: { slot: FrameSlot; roomId: string }) {
   const art = useGallery((s) => artworkFor(s.uploads, slot.id));
   const curate = useGallery((s) => s.curate);
+  const lightsOn = useGallery((s) => s.lightsOn);
   const tex = useImageTexture(art?.image);
   const [hover, setHover] = useState(false);
   const group = useRef<THREE.Group>(null);
@@ -97,7 +98,7 @@ export function Frame({ slot, roomId }: { slot: FrameSlot; roomId: string }) {
       {/* picture light */}
       <mesh position={[0, fh / 2 + 0.22, 0.12]}>
         <boxGeometry args={[Math.min(fw * 0.5, 0.8), 0.04, 0.12]} />
-        <meshStandardMaterial color="#b89a5e" metalness={0.7} roughness={0.3} emissive="#fff1cc" emissiveIntensity={hover ? 0.6 : 0.25} />
+        <meshStandardMaterial color="#b89a5e" metalness={0.7} roughness={0.3} emissive="#fff1cc" emissiveIntensity={lightsOn ? (hover ? 0.6 : 0.25) : 0} />
       </mesh>
     </group>
   );

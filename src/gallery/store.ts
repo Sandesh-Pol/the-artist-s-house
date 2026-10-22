@@ -17,6 +17,8 @@ interface GalleryState {
   curate: boolean;
   panel: Panel;
   theme: string;
+  lightsOn: boolean;
+  curtainsOpen: boolean;
   uploads: Record<string, Artwork>;
   customSlots: CustomSlot[];
   enter: () => void;
@@ -31,6 +33,8 @@ interface GalleryState {
   setCurate: (v: boolean) => void;
   setPanel: (p: Panel) => void;
   setTheme: (id: string) => void;
+  toggleLights: () => void;
+  toggleCurtains: () => void;
   saveArtwork: (id: string, a: Artwork | null) => void;
   addSlot: (s: CustomSlot) => void;
   removeSlot: (id: string) => void;
@@ -43,7 +47,17 @@ const PREFS_KEY = "gallery-prefs-v1";
 interface Prefs {
   theme: string;
   customSlots: CustomSlot[];
+  lightsOn: boolean;
+  curtainsOpen: boolean;
 }
+
+const savePrefs = (s: Pick<GalleryState, "theme" | "customSlots" | "lightsOn" | "curtainsOpen">) =>
+  void idbSet(PREFS_KEY, {
+    theme: s.theme,
+    customSlots: s.customSlots,
+    lightsOn: s.lightsOn,
+    curtainsOpen: s.curtainsOpen,
+  } satisfies Prefs);
 
 export const useGallery = create<GalleryState>((set, get) => ({
   entered: false,
@@ -56,6 +70,8 @@ export const useGallery = create<GalleryState>((set, get) => ({
   curate: false,
   panel: null,
   theme: "gallery-white",
+  lightsOn: true,
+  curtainsOpen: true,
   uploads: {},
   customSlots: [],
   enter: () => set({ entered: true }),
@@ -75,7 +91,15 @@ export const useGallery = create<GalleryState>((set, get) => ({
   setPanel: (panel) => set({ panel }),
   setTheme: (theme) => {
     set({ theme });
-    void idbSet(PREFS_KEY, { theme, customSlots: get().customSlots } satisfies Prefs);
+    savePrefs(get());
+  },
+  toggleLights: () => {
+    set({ lightsOn: !get().lightsOn });
+    savePrefs(get());
+  },
+  toggleCurtains: () => {
+    set({ curtainsOpen: !get().curtainsOpen });
+    savePrefs(get());
   },
   saveArtwork: (id, a) => {
     const uploads = { ...get().uploads };
@@ -85,16 +109,15 @@ export const useGallery = create<GalleryState>((set, get) => ({
     void idbSet(KEY, uploads);
   },
   addSlot: (s) => {
-    const customSlots = [...get().customSlots, s];
-    set({ customSlots });
-    void idbSet(PREFS_KEY, { theme: get().theme, customSlots } satisfies Prefs);
+    set({ customSlots: [...get().customSlots, s] });
+    savePrefs(get());
   },
   removeSlot: (id) => {
     const customSlots = get().customSlots.filter((s) => s.id !== id);
     const uploads = { ...get().uploads };
     delete uploads[id];
     set({ customSlots, uploads, selected: null, editing: null });
-    void idbSet(PREFS_KEY, { theme: get().theme, customSlots } satisfies Prefs);
+    savePrefs(get());
     void idbSet(KEY, uploads);
   },
   loadUploads: async () => {
@@ -104,6 +127,8 @@ export const useGallery = create<GalleryState>((set, get) => ({
       ...(u ? { uploads: u } : {}),
       ...(p?.theme ? { theme: p.theme } : {}),
       ...(p?.customSlots ? { customSlots: p.customSlots } : {}),
+      ...(p?.lightsOn !== undefined ? { lightsOn: p.lightsOn } : {}),
+      ...(p?.curtainsOpen !== undefined ? { curtainsOpen: p.curtainsOpen } : {}),
     });
   },
 }));

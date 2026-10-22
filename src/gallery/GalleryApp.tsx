@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram, Palette, Plus } from "lucide-react";
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram, Palette, Plus, Lightbulb, Blinds, Map as MapIcon } from "lucide-react";
 import { House } from "./three/House";
 import { dragState } from "./three/dragState";
 import { ROOMS } from "./data/rooms";
@@ -91,7 +91,7 @@ function useControls(el: React.RefObject<HTMLDivElement | null>) {
 
 function NavPad() {
   const { step, turn, roomIndex } = useGallery();
-  const btn = "glass grid size-11 place-items-center rounded-full text-foreground transition hover:text-primary disabled:opacity-30";
+  const btn = "glass-lite grid size-11 place-items-center rounded-full text-foreground transition hover:text-primary disabled:opacity-30";
   return (
     <div className="pointer-events-auto grid grid-cols-3 gap-1.5">
       <span />
@@ -132,6 +132,31 @@ function Intro() {
         <p className="mt-6 text-xs text-muted-foreground animate-rise [animation-delay:600ms]">Scroll or use arrows to walk · drag to look · tap a painting</p>
       </div>
     </div>
+  );
+}
+
+function HomeControls() {
+  const { lightsOn, curtainsOpen, toggleLights, toggleCurtains } = useGallery();
+  const btn = "rounded-full p-1.5 transition hover:text-primary";
+  return (
+    <>
+      <button
+        className={`${btn} ${lightsOn ? "text-primary" : "text-muted-foreground"}`}
+        onClick={toggleLights}
+        aria-label={lightsOn ? "Turn lights off" : "Turn lights on"}
+        title={lightsOn ? "Lights on" : "Lights off"}
+      >
+        <Lightbulb size={15} />
+      </button>
+      <button
+        className={`${btn} ${curtainsOpen ? "text-primary" : "text-muted-foreground"}`}
+        onClick={toggleCurtains}
+        aria-label={curtainsOpen ? "Close curtains" : "Open curtains"}
+        title={curtainsOpen ? "Curtains open" : "Curtains closed"}
+      >
+        <Blinds size={15} />
+      </button>
+    </>
   );
 }
 
@@ -179,6 +204,7 @@ function ThemePicker() {
 export function GalleryApp() {
   const ref = useRef<HTMLDivElement>(null);
   const { entered, curate, setCurate, setPanel, setAddingFrame, loadUploads } = useGallery();
+  const [showMap, setShowMap] = useState(true);
   useControls(ref);
   useEffect(() => {
     void loadUploads();
@@ -198,6 +224,7 @@ export function GalleryApp() {
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("about")}>About</button>
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("contact")}>Contact</button>
               <a className="rounded-full p-1.5 hover:text-primary" href={ARTIST.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={15} /></a>
+              <HomeControls />
               <ThemePicker />
               <button
                 className={`rounded-full px-3 py-1.5 transition ${curate ? "bg-primary text-primary-foreground" : "hover:text-primary"}`}
@@ -211,7 +238,17 @@ export function GalleryApp() {
             <RoomTitle />
             <div className="flex items-end justify-between gap-3">
               <NavPad />
-              <FloorMap />
+              <div className="flex flex-col items-end gap-2">
+                <button
+                  className="glass-lite pointer-events-auto grid size-11 place-items-center rounded-full text-foreground transition hover:text-primary"
+                  onClick={() => setShowMap(!showMap)}
+                  aria-label={showMap ? "Hide floor plan" : "Show floor plan"}
+                  title={showMap ? "Hide floor plan" : "Show floor plan"}
+                >
+                  <MapIcon size={17} />
+                </button>
+                {showMap && <FloorMap />}
+              </div>
             </div>
           </div>
         </div>

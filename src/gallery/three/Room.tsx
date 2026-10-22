@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { CELL, STOREY, roomCenter, type Room as RoomT, type Side } from "../data/rooms";
 import { themeById } from "../data/themes";
@@ -70,7 +71,53 @@ function Wall({ room, side, mat, trim }: { room: RoomT; side: Side; mat: THREE.M
   );
 }
 
+function Curtains({ w, h }: { w: number; h: number }) {
+  const open = useGallery((s) => s.curtainsOpen);
+  const left = useRef<THREE.Mesh>(null);
+  const right = useRef<THREE.Mesh>(null);
+  const t = useRef(1); // 1 = open, 0 = closed
+  const pw = w / 2 + 0.15;
+
+  useFrame((_, dt) => {
+    t.current += ((open ? 1 : 0) - t.current) * (1 - Math.exp(-6 * dt));
+    const k = t.current;
+    // closed: panels meet at centre; open: bunched at the sides
+    const x = pw / 2 + k * (pw / 2 - 0.18);
+    const sx = 1 - k * 0.72;
+    if (left.current) {
+      left.current.position.x = -x;
+      left.current.scale.x = sx;
+    }
+    if (right.current) {
+      right.current.position.x = x;
+      right.current.scale.x = sx;
+    }
+  });
+
+  const mat = (
+    <meshStandardMaterial color="#e8dcc8" roughness={0.9} side={THREE.DoubleSide} />
+  );
+  return (
+    <group position={[0, 0, 0.16]}>
+      {/* rod */}
+      <mesh position={[0, h / 2 + 0.16, 0]} rotation-z={Math.PI / 2}>
+        <cylinderGeometry args={[0.025, 0.025, w + 0.7, 12]} />
+        <meshStandardMaterial color="#8a6a48" metalness={0.6} roughness={0.4} />
+      </mesh>
+      <mesh ref={left} position={[-w / 2, 0, 0]}>
+        <boxGeometry args={[pw, h + 0.3, 0.05]} />
+        {mat}
+      </mesh>
+      <mesh ref={right} position={[w / 2, 0, 0]}>
+        <boxGeometry args={[pw, h + 0.3, 0.05]} />
+        {mat}
+      </mesh>
+    </group>
+  );
+}
+
 function Window({ y, trim, tall }: { y: number; trim: THREE.Material; tall: boolean }) {
+  const curtainsOpen = useGallery((s) => s.curtainsOpen);
   const w = 3.4;
   const h = tall ? 5 : 2.6;
   const cy = tall ? 4.5 : y;
@@ -78,7 +125,7 @@ function Window({ y, trim, tall }: { y: number; trim: THREE.Material; tall: bool
     <group position={[0, cy, 0.11]}>
       <mesh>
         <planeGeometry args={[w, h]} />
-        <meshStandardMaterial color="#dfeaf0" emissive="#f4efe2" emissiveIntensity={1.1} toneMapped={false} />
+        <meshStandardMaterial color="#dfeaf0" emissive="#f4efe2" emissiveIntensity={curtainsOpen ? 1.1 : 0.2} toneMapped={false} />
       </mesh>
       {[-w / 2, 0, w / 2].map((x) => (
         <mesh key={x} position={[x, 0, 0.03]} material={trim}>
@@ -90,7 +137,8 @@ function Window({ y, trim, tall }: { y: number; trim: THREE.Material; tall: bool
           <boxGeometry args={[w, 0.07, 0.06]} />
         </mesh>
       ))}
-      <pointLight position={[0, 0, 1.2]} intensity={6} distance={8} color="#fff4e0" />
+      <pointLight position={[0, 0, 1.2]} intensity={curtainsOpen ? 6 : 0.4} distance={8} color="#fff4e0" />
+      <Curtains w={w} h={h} />
     </group>
   );
 }

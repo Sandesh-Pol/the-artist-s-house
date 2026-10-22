@@ -17,8 +17,8 @@ export function House() {
     >
       <color attach="background" args={[sky]} />
       <fog attach="fog" args={[sky, 14, 40]} />
-      <hemisphereLight args={["#fff7ea", "#8a6a4a", 0.9]} />
-      <ambientLight intensity={0.25} />
+      <hemisphereLight args={["#fff7ea", "#8a6a4a", lightsOn ? 0.9 : 0.5]} />
+      <ambientLight intensity={lightsOn ? 0.25 : 0.12} />
       <Environment resolution={64}>
         <Lightformer intensity={1.4} position={[0, 6, 0]} rotation-x={Math.PI / 2} scale={[20, 20, 1]} color="#fff3df" />
         <Lightformer intensity={0.8} position={[-8, 2, 0]} rotation-y={Math.PI / 2} scale={[20, 4, 1]} color="#dfe9ee" />

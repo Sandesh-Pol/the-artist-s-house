@@ -24,12 +24,17 @@ function Box({ x0, x1, y0, y1, mat }: { x0: number; x1: number; y0: number; y1: 
 }
 
 function Wall({ room, side, mat, trim }: { room: RoomT; side: Side; mat: THREE.Material; trim: THREE.Material }) {
+  const customSlots = useGallery((s) => s.customSlots);
   const door = room.doors.find((d) => d.side === side);
   const hasWindow = room.windows.includes(side);
   const h = room.height;
   const half = CELL / 2;
   const [px, pz] = POS[side];
   const db = door?.bottom ?? 0;
+  const wallSlots = [
+    ...room.slots.filter((s) => s.side === side),
+    ...customSlots.filter((s) => s.roomId === room.id && s.side === side),
+  ];
   return (
     <group position={[px, 0, pz]} rotation-y={ROT[side]}>
       {door ? (

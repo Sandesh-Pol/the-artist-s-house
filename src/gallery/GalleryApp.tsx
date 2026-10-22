@@ -135,6 +135,31 @@ function Intro() {
   );
 }
 
+function HomeControls() {
+  const { lightsOn, curtainsOpen, toggleLights, toggleCurtains } = useGallery();
+  const btn = "rounded-full p-1.5 transition hover:text-primary";
+  return (
+    <>
+      <button
+        className={`${btn} ${lightsOn ? "text-primary" : "text-muted-foreground"}`}
+        onClick={toggleLights}
+        aria-label={lightsOn ? "Turn lights off" : "Turn lights on"}
+        title={lightsOn ? "Lights on" : "Lights off"}
+      >
+        <Lightbulb size={15} />
+      </button>
+      <button
+        className={`${btn} ${curtainsOpen ? "text-primary" : "text-muted-foreground"}`}
+        onClick={toggleCurtains}
+        aria-label={curtainsOpen ? "Close curtains" : "Open curtains"}
+        title={curtainsOpen ? "Curtains open" : "Curtains closed"}
+      >
+        <Blinds size={15} />
+      </button>
+    </>
+  );
+}
+
 function ThemePicker() {
   const { theme, setTheme } = useGallery();
   const [open, setOpen] = useState(false);

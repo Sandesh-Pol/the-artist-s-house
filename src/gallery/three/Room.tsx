@@ -1,5 +1,5 @@
-import { useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { Suspense, useMemo, useRef } from "react";
+import { useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { CELL, STOREY, roomCenter, type Room as RoomT, type Side } from "../data/rooms";
 import { themeById } from "../data/themes";
@@ -7,6 +7,7 @@ import { useGallery } from "../store";
 import { plasterTexture, rugTexture, woodTexture } from "./textures";
 import { Frame } from "./Frame";
 import { Furniture } from "./Furniture";
+import { Hotspots } from "./Hotspots";
 
 const D = CELL / 2 - 0.1;
 const WALL_T = 0.2;
@@ -61,7 +62,9 @@ function Wall({ room, side, mat, trim }: { room: RoomT; side: Side; mat: THREE.M
       <mesh position={[0, 0.07, 0.11]} material={trim}>
         <boxGeometry args={[CELL - 0.2, 0.14, 0.03]} />
       </mesh>
-      {hasWindow && <Window y={Math.min(h / 2 + 0.2, 2.4)} trim={trim} tall={h > STOREY} />}
+      {hasWindow && (
+        <Window y={Math.min(h / 2 + 0.2, 2.4)} trim={trim} tall={h > STOREY} u={room.windowU?.[side] ?? 0} />
+      )}
       {wallSlots.map((s) => (
         <group key={s.id} position={[s.u, s.y ?? 1.75, 0.1]}>
           <Frame slot={s} roomId={room.id} />
@@ -116,17 +119,42 @@ function Curtains({ w, h }: { w: number; h: number }) {
   );
 }
 
-function Window({ y, trim, tall }: { y: number; trim: THREE.Material; tall: boolean }) {
+function ViewPlane({ w, h, url, lit }: { w: number; h: number; url: string; lit: boolean }) {
+  const tex = useLoader(THREE.TextureLoader, url);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return (
+    <mesh>
+      <planeGeometry args={[w, h]} />
+      <meshStandardMaterial map={tex} emissiveMap={tex} emissive="#ffffff" emissiveIntensity={lit ? 0.55 : 0.12} toneMapped={false} />
+    </mesh>
+  );
+}
+
+function Window({ y, trim, tall, u = 0 }: { y: number; trim: THREE.Material; tall: boolean; u?: number }) {
   const curtainsOpen = useGallery((s) => s.curtainsOpen);
+  const windowView = useGallery((s) => s.windowView);
   const w = 3.4;
   const h = tall ? 5 : 2.6;
   const cy = tall ? 4.5 : y;
   return (
-    <group position={[0, cy, 0.11]}>
-      <mesh>
-        <planeGeometry args={[w, h]} />
-        <meshStandardMaterial color="#dfeaf0" emissive="#f4efe2" emissiveIntensity={curtainsOpen ? 1.1 : 0.2} toneMapped={false} />
-      </mesh>
+    <group position={[u, cy, 0.11]}>
+      {windowView ? (
+        <Suspense
+          fallback={
+            <mesh>
+              <planeGeometry args={[w, h]} />
+              <meshStandardMaterial color="#dfeaf0" />
+            </mesh>
+          }
+        >
+          <ViewPlane w={w} h={h} url={windowView} lit={curtainsOpen} />
+        </Suspense>
+      ) : (
+        <mesh>
+          <planeGeometry args={[w, h]} />
+          <meshStandardMaterial color="#dfeaf0" emissive="#f4efe2" emissiveIntensity={curtainsOpen ? 1.1 : 0.2} toneMapped={false} />
+        </mesh>
+      )}
       {[-w / 2, 0, w / 2].map((x) => (
         <mesh key={x} position={[x, 0, 0.03]} material={trim}>
           <boxGeometry args={[0.07, h, 0.06]} />
@@ -209,6 +237,7 @@ export function Room({ room }: { room: RoomT }) {
       ))}
       {room.stairs && <Stairs wood={mats.floor} trim={mats.trim} />}
       <Furniture roomId={room.id} rug={mats.rug} />
+      <Hotspots roomId={room.id} />
       {/* pendant */}
       <group position={[0, room.height - 0.9, 0]}>
         <mesh position-y={0.45}>

@@ -19,6 +19,9 @@ interface GalleryState {
   theme: string;
   lightsOn: boolean;
   curtainsOpen: boolean;
+  hotspot: string | null;
+  help: boolean;
+  windowView: string;
   uploads: Record<string, Artwork>;
   customSlots: CustomSlot[];
   enter: () => void;
@@ -35,6 +38,9 @@ interface GalleryState {
   setTheme: (id: string) => void;
   toggleLights: () => void;
   toggleCurtains: () => void;
+  setHotspot: (id: string | null) => void;
+  setHelp: (v: boolean) => void;
+  setWindowView: (dataUrl: string) => void;
   saveArtwork: (id: string, a: Artwork | null) => void;
   addSlot: (s: CustomSlot) => void;
   removeSlot: (id: string) => void;

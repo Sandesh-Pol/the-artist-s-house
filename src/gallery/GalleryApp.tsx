@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Instagram, Palette, Plus, Lightbulb, Blinds, Map as MapIcon, CircleHelp, LockKeyhole, Delete } from "lucide-react";
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Palette, Plus, Lightbulb, Blinds, Map as MapIcon, CircleHelp, LockKeyhole, Delete } from "lucide-react";
 import { House } from "./three/House";
 import { dragState } from "./three/dragState";
 import { ROOMS } from "./data/rooms";
@@ -285,7 +285,15 @@ export function GalleryApp() {
             <nav className="glass flex items-center gap-1 rounded-full px-1 py-1 text-[10px] uppercase tracking-[0.15em] md:px-2 md:text-xs">
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("about")}>About</button>
               <button className="rounded-full px-3 py-1.5 hover:text-primary" onClick={() => setPanel("contact")}>Contact</button>
-              <a className="rounded-full p-1.5 hover:text-primary" href={ARTIST.instagram} target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={15} /></a>
+              <a className="rounded-full px-3 py-1.5 hover:text-primary" href={ARTIST.instagram} target="_blank" rel="noreferrer">Instagram</a>
+              <button
+                className="rounded-full px-3 py-1.5 transition hover:text-primary"
+                onClick={() => useGallery.getState().goRoom(0)}
+                aria-label="Return to entrance"
+                title="Return to entrance"
+              >
+                Home
+              </button>
               <button
                 className={`rounded-full px-3 py-1.5 transition ${curate ? "bg-primary text-primary-foreground" : "hover:text-primary"}`}
                 onClick={() => setCurate(!curate)}

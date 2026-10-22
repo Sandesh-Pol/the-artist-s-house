@@ -16,6 +16,7 @@ export interface Room {
   eye?: number; // camera height above room floor
   doors: Door[];
   windows: Side[];
+  windowU?: Partial<Record<Side, number>>; // horizontal offset of a window along its wall
   wallTone: string;
   slots: FrameSlot[];
   stairs?: boolean;
@@ -47,12 +48,12 @@ export const ROOMS: Room[] = [
   {
     id: "studio", view: "n", name: "Studio", subtitle: "Sketches, studies & works in progress",
     floor: 0, gx: 2, gz: 0, height: STOREY,
-    doors: [{ side: "w" }], windows: ["e"], wallTone: "#f1ece2",
+    doors: [{ side: "w" }], windows: ["e", "s"], windowU: { s: 2.6 }, wallTone: "#f1ece2",
     slots: [
       { id: "studio-n1", side: "n", u: -2.4, w: 1.2, h: 1.5 },
       { id: "studio-n2", side: "n", u: 0, w: 1.2, h: 1.5 },
       { id: "studio-n3", side: "n", u: 2.4, w: 1.2, h: 1.5 },
-      { id: "studio-s1", side: "s", u: 0, w: 2, h: 1.6 },
+      { id: "studio-s1", side: "s", u: -2.4, w: 2, h: 1.6 },
     ],
   },
   {

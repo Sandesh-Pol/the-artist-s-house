@@ -7,6 +7,7 @@ import art2 from "@/assets/6.jpeg";
 import art7 from "@/assets/7.jpeg";
 import art8 from "@/assets/8.jpeg";
 import art9 from "@/assets/9.jpeg";
+import art10 from "@/assets/10.jpeg";
 import { ALL_SLOTS } from "./rooms";
 
 export interface Artwork {
@@ -93,6 +94,14 @@ export const ARTWORK_SEQUENCE: Artwork[] = [
     year: "2026", 
     description: "A sketch of Naruto Uzumaki wearing his leaf village headband and zipped jacket.", 
     story: "Capturing the determined spirit of the ninja hero." 
+  },
+{
+    title: "Shiva and Parvati",
+    image: art10,
+    medium: "Acrylic on oval framed board",
+    year: "2026",
+    description: "A devotional painting of Lord Shiva with a crescent moon and Parvati set against a warm yellow-orange background beneath a bold red sun with white scalloped detailing and red lotuses below.",
+    story: "Capturing serene divine harmony, eternal devotion, and spiritual union through vibrant traditional colors."
   },
 ];
 

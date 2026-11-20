@@ -1,6 +1,6 @@
 // Artist details shown throughout the gallery.
 export const ARTIST = {
-  name: "Sanjanaaa..",
+  name: "Sanjanaaa",
   tagline: "Painter & draughtswoman",
   intro:
     "I paint the small, quiet moments that most people walk past — afternoon light, a familiar pair of hands, the colour of a coastline just before dark.",

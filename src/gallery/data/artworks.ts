@@ -47,6 +47,14 @@ export const ARTWORK_SEQUENCE: Artwork[] = [
     description: "A delicate green leafy vine stretching across the frame, suspending a small house with a glowing red heart window.", 
     story: "Symbolizing home, warmth, and the growth of love in nature." 
   },
+    { 
+    title: "Celestial Spiral", 
+    image: art4, 
+    medium: "Watercolor and acrylic", 
+    year: "2026", 
+    description: "A dynamic blue swirling galaxy background dotted with small golden-yellow stars.", 
+    story: "Reflecting the infinite motion and mystery of the cosmos." 
+  },
   { 
     title: "Mandala Sunflowers", 
     image: art3, 
@@ -55,14 +63,7 @@ export const ARTWORK_SEQUENCE: Artwork[] = [
     description: "An intricate black-and-white ink drawing combining a mandala design with sunflower petals against a dark background.", 
     story: "Exploring patterns of nature and symmetry through detailed penwork." 
   },
-  { 
-    title: "Celestial Spiral", 
-    image: art4, 
-    medium: "Watercolor and acrylic", 
-    year: "2026", 
-    description: "A dynamic blue swirling galaxy background dotted with small golden-yellow stars.", 
-    story: "Reflecting the infinite motion and mystery of the cosmos." 
-  },
+
   { 
     title: "Peacock Mandala Fusion", 
     image: art5, 
